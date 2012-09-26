@@ -43,7 +43,8 @@ func Compute(lat, long float64, resolution, slice int) *Location {
 	location := new(Location)
 	location.Lat = lat
 	location.Long = long
-	fslice := float64(slice) / math.Pow10(resolution)
+	fresolution := 1.0 / math.Pow10(resolution)
+	fslice := float64(slice) * fresolution
 	adj_lat := roundSliceDown(lat, fslice)
 	adj_long := roundSliceDown(long, fslice)
 	geocell := []string{fmt.Sprintf(format, adj_lat), fmt.Sprintf(format, adj_long-fslice), fmt.Sprintf(format, adj_lat-fslice), fmt.Sprintf(format, adj_long)}

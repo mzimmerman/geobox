@@ -25,11 +25,12 @@ import (
 )
 
 type Location struct {
-	Lat        float64
-	Long       float64
-	Slice      int
-	Resolution int
-	Geocell    string
+	Lat          float64
+	Long         float64
+	Slice        int
+	GeocellArray [4]float64
+	Resolution   int
+	Geocell      string
 }
 
 func roundSliceDown(coord, slice float64) float64 {
@@ -73,6 +74,10 @@ func Compute(lat, long float64, resolution, slice int) *Location {
 	fslice := float64(slice) * fresolution
 	adj_lat := roundSliceDown(lat, fslice)
 	adj_long := roundSliceDown(long, fslice)
+	location.GeocellArray[0] = adj_lat
+	location.GeocellArray[1] = adj_long - fslice
+	location.GeocellArray[2] = adj_lat - fslice
+	location.GeocellArray[3] = adj_long - fslice
 	geocell := []string{fmt.Sprintf(format, adj_lat), fmt.Sprintf(format, adj_long-fslice), fmt.Sprintf(format, adj_lat-fslice), fmt.Sprintf(format, adj_long)}
 	location.Geocell = strings.Join(geocell, "|")
 	return location
